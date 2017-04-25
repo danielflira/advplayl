@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="cp437">
+        <title><%= GetEnvServer() %></title>
+
+        <!-- estilos -->
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://www.w3schools.com//lib/w3-theme-teal.css">
+        <!-- <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-purple.css"> -->
+
+        <!-- scripts -->
+        <script src="https://ace.c9.io/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <style>
+            html, body { height: 100%; }
+            #editor { width: 100%; height: 100%; }
+        </style>
+    </head>
+
+    <body>
+        <nav class="w3-theme w3-bar w3-large">
+            <div class="w3-bar-item"><h2>AdvPL playground</h2></a>
+        </nav>
+
+        <div class="w3-row" style="height: 88%">
+            <!-- editor -->
+            <div class="w3-twothird w3-panel" style="height: 100%">
+                <div class="w3-card" style="height: 100%">
+                    <div id="editor">/*
+Faca uma programa que some dois numeros
+*/
+
+Function u_main()
+    Local n1      := Val(Stdin())
+    Local n2      := Val(Stdin())
+    Local nResult := 0
+
+    Stdout(nResult)
+Return
+
+// clique em executar</div>
+                </div>
+            </div>
+
+            <form>
+            <!-- controls -->
+            <div class="w3-third">
+                <!-- stdin -->
+                <div class="w3-panel">
+                    <div class="w3-card">
+                        <div class="w3-container w3-theme"><h4>stdin</h4></div>
+                        <textarea rows="5" class="w3-input" name="stdin">10
+20</textarea>
+                    </div>
+                </div>
+
+                <!-- stdout esperado -->
+                <div class="w3-panel">
+                    <div class="w3-card">
+                        <div class="w3-container w3-theme"><h4>stdout</h4></div>
+                        <textarea rows="5" class="w3-input" name="stdout" id="stdout">saida da execucao</textarea>
+                    </div>
+                </div>
+
+                <!-- stdout -->
+                <div class="w3-panel">
+                    <div class="w3-card">
+                        <div class="w3-container w3-theme"><h4>stdout (esperado)</h4></div>
+                        <textarea rows="5" class="w3-input" name="stdout-esperado" id="stdout-esperado">30</textarea>
+                    </div>
+                </div>
+
+                <!-- entry -->
+                <div class="w3-panel">
+                    <div class="w3-card">
+                        <div class="w3-container w3-theme"><h4>entry</h4></div>
+                        <input type="text" class="w3-input" name="entry" value="u_main()"/>
+                    </div>
+                </div>
+
+                <!-- actions -->
+                <div class="w3-panel">
+                    <div class="w3-row">
+                        <div id="resultado" class="w3-container w3-twothird w3-left w3-round-large"></div>
+
+                        <div class="w3-container w3-third w3-right">
+                            <button id="executar" class="w3-btn w3-round-large w3-theme" style="width: 100%">Executar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- campos de controle -->
+                <input type="hidden" name="codigo" id="codigo" />
+                <input type="hidden" name="uuidv4" id="uuidv4" value="<%= FwUUIDv4() %>" />
+            </div>
+            </form>
+
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                // configura editor
+                var editor = ace.edit("editor");
+                editor.setTheme("ace/theme/chrome");
+                editor.getSession().setMode("ace/mode/vbscript");
+                editor.setFontSize(20);
+
+                $('#executar').click(function(event) {
+                    // atualiza campo do codigo
+                    $('#codigo').val(editor.getValue());
+
+                    // manda tudo para o server
+                    $.post('/u_runtime.apl', $('form').serialize(), function(data) {
+                        var $resultado = $('#resultado');
+
+                        $('#stdout').val(data);
+
+                        if ( $('#stdout-esperado').val() === data) {
+                            $resultado.removeClass('w3-red');
+                            $resultado.addClass('w3-green');
+                            $resultado.html('<h6>funcionou :)</h6>');
+                        } else {
+                            $resultado.removeClass('w3-green');
+                            $resultado.addClass('w3-red');
+                            $resultado.html('<h6>nao funcionou :(</h6>');
+                        }
+                    });
+
+                    // evita que faca o post
+                    event.preventDefault();
+                });
+            });
+        </script>
+    </body>
+</html> 
