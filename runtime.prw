@@ -80,7 +80,7 @@ Return
 
 
 Function StdoutLn(cMessage)
-    cOutput += AsString(cMessage) + CRLF
+    cOutput += AsString(cMessage) + Chr(10)
 Return
 
 
@@ -125,7 +125,12 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
             cEntry := cValue
 
         ElseIf cName == "stdin"
-            aInput := StrTokArr2(cValue, CRLF)
+            // altera CR para LF
+            cValue := StrTran(cValue, Chr(13), Chr(10))
+            // altera LFLF para LF
+            cValue := StrTran(cValue, Chr(10)+Chr(10), Chr(10))
+            // quebra valores por LF
+            aInput := StrTokArr2(cValue, Chr(10), .T.)
 
         EndIf
     Next nI
