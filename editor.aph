@@ -93,7 +93,7 @@ Return
                         <div id="resultado" class="w3-container w3-twothird w3-left w3-round-large"></div>
 
                         <div class="w3-container w3-third w3-right">
-                            <button id="executar" class="w3-btn w3-round-large w3-theme" style="width: 100%">Executar</button>
+                            <button id="executar" class="w3-btn w3-round-large w3-theme" style="width: 100%">Executar (F9)</button>
                         </div>
                     </div>
                 </div>
@@ -137,6 +137,13 @@ Return
 
                     // evita que faca o post
                     event.preventDefault();
+                });
+
+                // adicionada execucao com f9
+                $(window).bind('keyup', function(event) {
+                    if (event.key.toLowerCase() === 'f9') {
+                        $('#executar').click();
+                    }
                 });
             });
         </script>
