@@ -3,7 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="cp437">
-        <title><%= GetEnvServer() %></title>
+        <title>ADVPlayL</title>
 
         <!-- estilos -->
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -22,7 +22,13 @@
 
     <body>
         <nav class="w3-theme w3-bar w3-large">
-            <div class="w3-bar-item"><h2>AdvPL playground</h2></a>
+            <div class="w3-bar-item"><h3>ADVPlayL</h3></a></div>
+            <div class="w3-dropdown-hover">
+                <button class="w3-button"><h3>Exerc&iacute;cios</h3></button>
+                <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="https://www.hackerrank.com/dashboard" class="w3-bar-item w3-button" target="_blank">Hacker Rank</a>
+                </div>
+            </div>
         </nav>
 
         <div class="w3-row" style="height: 88%">
