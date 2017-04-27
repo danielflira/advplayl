@@ -140,12 +140,14 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
 
     // se compilou executa
     If oRPO2:Compile(cUUID + ".prw", cCodigo)
+        ErrorBlock({|oError| cOutput := oError:ErrorStack})
         &(cEntry)
-        oRPO2:Close()
-
+        
     // se nao compilou mostra erro
     Else
         cOutput := oRPO2:cErrStr
-        oRPO2:Close()
+        
     EndIf
+
+    oRPO2:Close()
 Return cOutput
