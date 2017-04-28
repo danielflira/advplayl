@@ -8,7 +8,7 @@
         <!-- estilos -->
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://www.w3schools.com//lib/w3-theme-teal.css">
-        <!-- <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-purple.css"> -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <!-- scripts -->
         <script src="https://ace.c9.io/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -17,6 +17,12 @@
         <style>
             html, body { height: 100%; }
             #editor { width: 100%; height: 100%; }
+
+            .advplayl-loading { display: none; z-index: 99; position: fixed;
+                    top: 0px; bottom: 0px; left: 0px; right: 0px;
+                    font-size: 42px; background-color: rgba(0, 0, 0, 0.75);}
+            .advplayl-center {width: 100%; height: 100%; text-align: center;
+                    color: white;}
         </style>
     </head>
 
@@ -103,7 +109,12 @@ Return
                 <input type="hidden" name="uuidv4" id="uuidv4" value="<%= FwUUIDv4() %>" />
             </div>
             </form>
+        </div>
 
+        <div id="loading" class="advplayl-loading">
+            <table class="advplayl-center"><tr><td>
+                <div class="fa fa-spinner fa-spin"></div>
+            </td></tr></table>
         </div>
 
         <script>
@@ -118,8 +129,10 @@ Return
                     // atualiza campo do codigo
                     $('#codigo').val(editor.getValue());
 
+                    $('#loading').show();
+
                     // manda tudo para o server
-                    $.post('/u_runtime.apl', $('form').serialize(), function(data) {
+                    $.post('/u_runtime.apl', $('form').serialize()).done(function(data) {
                         var $resultado = $('#resultado');
 
                         $('#stdout').val(data);
@@ -133,6 +146,8 @@ Return
                             $resultado.addClass('w3-red');
                             $resultado.html('<h6>nao funcionou :(</h6>');
                         }
+                    }).always(function(){
+                        $('#loading').hide();
                     });
 
                     // evita que faca o post
