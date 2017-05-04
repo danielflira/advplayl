@@ -37,8 +37,6 @@
                     <a href="https://www.hackerrank.com/dashboard" class="w3-bar-item w3-button" target="_blank">Hacker Rank</a>
                 </div>
             </div>
-            <input type="text" class="w3-bar-item w3-input w3-white w3-mobile w3-right" placeholder="nome do arquivo"
-                name="arquivo" value="">
         </nav>
 
         <div class="w3-row" style="height: 88%">
@@ -55,45 +53,62 @@
                 <!-- stdout -->
                 <div class="w3-panel">
                     <div class="w3-card">
-                        <div class="w3-container w3-theme"><h4>stdout (sa&iacute;da)</h4></div>
+                        <div class="w3-container w3-theme w3-display-container advplayl-collapse">
+                            <span class="w3-container w3-display-right">+</span>
+                            <h4>stdout (sa&iacute;da)</h4>
+                        </div>
                         <textarea rows="5" class="w3-input" name="stdout" id="stdout">saida da execucao</textarea>
-                    </div>
-                </div>
-
-                <!-- stdin -->
-                <div class="w3-panel">
-                    <div class="w3-card">
-                        <div class="w3-container w3-theme"><h4>stdin (entrada)</h4></div>
-                        <textarea rows="5" class="w3-input" name="stdin">10
-20</textarea>
                     </div>
                 </div>
 
                 <!-- stdout esperado -->
                 <div class="w3-panel">
                     <div class="w3-card">
-                        <div class="w3-container w3-theme"><h4>stdout (sa&iacute;da esperada)</h4></div>
+                        <div class="w3-container w3-theme w3-display-container advplayl-collapse">
+                            <span class="w3-container w3-display-right">+</span>
+                            <h4>stdout (sa&iacute;da esperada)</h4>
+                        </div>
                         <textarea rows="5" class="w3-input" name="stdout-esperado" id="stdout-esperado">30</textarea>
+                    </div>
+                </div>
+
+                <!-- stdin -->
+                <div class="w3-panel">
+                    <div class="w3-card">
+                        <div class="w3-container w3-theme w3-display-container advplayl-collapse">
+                            <span class="w3-container w3-display-right">+</span>
+                            <h4>stdin (entrada)</h4>
+                        </div>
+                        <textarea rows="5" class="w3-input" name="stdin">10
+20</textarea>
                     </div>
                 </div>
 
                 <!-- entry -->
                 <div class="w3-panel">
                     <div class="w3-card">
-                        <div class="w3-container w3-theme"><h4>entry</h4></div>
-                        <input type="text" class="w3-input" name="entry" value="u_main()"/>
+                        <div class="w3-container w3-theme w3-display-container advplayl-collapse">
+                            <span class="w3-container w3-display-right">+</span>
+                            <h4>options</h4>
+                        </div>
+                        <div class="w3-container">
+                            <p>
+                                <label>entry</label>
+                                <input type="text" class="w3-input w3-border" name="entry" value="u_main()"/>
+                            </p>
+                            <p>
+                                <label>filename</label>
+                                <input type="text" class="w3-input w3-border" placeholder="nome do arquivo" name="arquivo" value=""/>
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- actions -->
                 <div class="w3-panel">
-                    <div class="w3-row">
-                        <div id="resultado" class="w3-container w3-twothird w3-left w3-round-large"></div>
-
-                        <div class="w3-container w3-third w3-right">
-                            <button id="executar" class="w3-btn w3-round-large w3-theme" style="width: 100%">Executar (F9)</button>
-                        </div>
-                    </div>
+                    <button id="executar" class="w3-btn w3-theme-d4" style="width: 100%">Executar (F9)</button>
+                    <hr/>
+                    <div id="resultado" class="w3-container"></div>
                 </div>
 
                 <!-- campos de controle -->
@@ -150,6 +165,13 @@
                     if (event.key.toLowerCase() === 'f9') {
                         $('#executar').click();
                     }
+                });
+
+                // control collapse
+                $('.advplayl-collapse').nextAll().toggle().first().toggle();
+
+                $('.advplayl-collapse').click(function() {
+                    $(this).nextAll().toggle();
                 });
             });
         </script>

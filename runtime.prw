@@ -120,7 +120,7 @@ Function LoadFile(__aProcParms)
         cName := Lower(__aProcParms[nI][1])
         cValue := __aProcParms[nI][2]
 
-        If cName == "filename"
+        If cName == "arquivo"
             cFile += "/" + cValue + ".prw"
         EndIf
     Next nI
