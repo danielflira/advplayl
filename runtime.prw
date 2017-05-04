@@ -90,8 +90,53 @@ Function Stdin()
     If nInput <= Len(aInput)
         cInput := aInput[nInput++]
     EndIf
-
 Return cInput
+
+
+Function SaveFile(cFilename, cContent)
+    Local cFile := "./fontes"
+    Local nFile := 0
+
+    // cria diretorio (nao importa se nao funcionar)
+    MakeDir(cFile)
+    cFile += "/" + cFilename + ".prw"
+
+    // salva o arquivo no disco (nao precisa conferir)
+    nFile := FCreate(cFile)
+    FWrite(nFile, cContent)
+    FClose(nFile)
+Return
+
+
+Function LoadFile(__aProcParms)
+    Local cContent := ""
+    Local nI       := 0
+    Local cName    := ""
+    Local cValue   := ""
+    Local cFile    := "./fontes"
+
+    // pegando parametros do get
+    For nI := 1 To  Len(__aProcParms)
+        cName := Lower(__aProcParms[nI][1])
+        cValue := __aProcParms[nI][2]
+
+        If cName == "filename"
+            cFile += "/" + cValue + ".prw"
+        EndIf
+    Next nI
+
+    // lendo arquivo default
+    If cFile == "./fontes"
+        cFile += "/default.prw"
+    EndIf
+
+    // lendo conteudo do arquivo
+    nFile := FOpen(cFile)
+    If nFile > -1
+        FRead(nFile, @cContent, 8192)
+        FClose(nFile)
+    EndIf
+Return cContent
 
 
 User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTPPage)
@@ -132,8 +177,16 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
             // quebra valores por LF
             aInput := StrTokArr2(cValue, Chr(10), .T.)
 
+        ElseIf cName == "arquivo"
+            cArquivo := cValue
+
         EndIf
     Next nI
+
+    // salva codigo antes de executar
+    If !Empty(cArquivo)
+        SaveFile(cArquivo, cCodigo)
+    EndIf
 
     // inicializa
     oRPO2 := RPO2():New(cUUID + ".rpo")
