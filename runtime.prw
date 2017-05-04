@@ -99,7 +99,7 @@ Function SaveFile(cFilename, cContent)
 
     // cria diretorio (nao importa se nao funcionar)
     MakeDir(cFile)
-    cFile += "/" + cFilename + ".prw"
+    cFile += "/" + cFilename
 
     // salva o arquivo no disco (nao precisa conferir)
     nFile := FCreate(cFile)
@@ -121,7 +121,7 @@ Function LoadFile(__aProcParms)
         cValue := __aProcParms[nI][2]
 
         If cName == "arquivo"
-            cFile += "/" + cValue + ".prw"
+            cFile += "/" + cValue
         EndIf
     Next nI
 

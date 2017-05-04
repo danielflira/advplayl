@@ -1,0 +1,47 @@
+<%
+Local nI := 0
+Local aFiles := Directory("./fontes/*.*",,,,2)
+%>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="cp437">
+        <title>ADVPlayL Explorer</title>
+
+        <!-- estilos -->
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://www.w3schools.com//lib/w3-theme-teal.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- scripts -->
+        <script src="https://ace.c9.io/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <style>
+            html, body, form { height: 100%; }
+        </style>
+    </head>
+
+    <body>
+        <div class="w3-container w3-theme">
+            <h3>Arquivos</h3>
+        </div>
+        <ul class="w3-ul w3-card-4">
+
+            <% For nI := 1 To Len(aFiles) %>
+
+            <li class="w3-padding-16">
+                <a href="/h_editor.apl?arquivo=<%= aFiles[nI][1] %>" class="btn" target="_blank">
+                    <div class="fa fa-file-o w3-xxxlarge w3-left w3-circle w3-margin-right"></div>
+                    <span class="w3-large"><%= aFiles[nI][1] %></span><br>
+                    <span><%= aFiles[nI][3] %> (<%= aFiles[nI][4] %>)</span>
+                </a>
+            </li>
+
+            <% Next nI %>
+
+        </ul>
+    </body>
+</html>
