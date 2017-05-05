@@ -30,9 +30,9 @@
         <form>
         
         <nav class="w3-bar w3-theme w3-border w3-large w3-padding">
-            <a href="#" class="w3-bar-item w3-button w3-mobile">ADVPlayL</a>
+            <span class="w3-bar-item w3-button w3-mobile">ADVPlayL</span>
             <div class="w3-dropdown-hover w3-mobile">
-                <button class="w3-button">Exerc&iacute;cios</button>
+                <span class="w3-button">Exerc&iacute;cios</span>
                 <div class="w3-dropdown-content w3-card-4">
                     <a href="https://www.hackerrank.com/dashboard" class="w3-bar-item w3-button" target="_blank">Hacker Rank</a>
                 </div>
