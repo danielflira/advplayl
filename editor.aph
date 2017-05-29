@@ -43,7 +43,7 @@
             <!-- editor -->
             <div class="w3-twothird w3-panel" style="height: 100%">
                 <div class="w3-card" style="height: 100%">
-                    <div id="editor"><%= LoadFile(__aProcParms) %></div>
+                    <div id="editor"><%= U_LoadFile(__aProcParms) %></div>
                 </div>
             </div>
 

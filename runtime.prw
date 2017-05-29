@@ -1,5 +1,7 @@
 #Include "Protheus.ch"
 
+#Define USERFUNCTION
+
 Class RPO2
     Data oRPO
     Data cRPO
@@ -74,17 +76,29 @@ Method Compile(cFile, cSource) Class RPO2
 Return ::Reload()
 
 
+#IfDef USERFUNCTION
+User Function Stdout(cMessage)
+#Else
 Function Stdout(cMessage)
+#EndIf
     cOutput += AsString(cMessage)
 Return
 
 
+#IfDef USERFUNCTION
+User Function StdoutLn(cMessage)
+#Else
 Function StdoutLn(cMessage)
+#EndIf
     cOutput += AsString(cMessage) + Chr(10)
 Return
 
 
+#IfDef USERFUNCTION
+User Function Stdin()
+#Else
 Function Stdin()
+#EndIf
     Local cInput := ""
 
     If nInput <= Len(aInput)
@@ -93,7 +107,7 @@ Function Stdin()
 Return cInput
 
 
-Function SaveFile(cFilename, cContent)
+User Function SaveFile(cFilename, cContent)
     Local cFile := "./fontes"
     Local nFile := 0
 
@@ -108,7 +122,7 @@ Function SaveFile(cFilename, cContent)
 Return
 
 
-Function LoadFile(__aProcParms)
+User Function LoadFile(__aProcParms)
     Local cContent := ""
     Local nI       := 0
     Local cName    := ""
@@ -185,7 +199,7 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
 
     // salva codigo antes de executar
     If !Empty(cArquivo)
-        SaveFile(cArquivo, cCodigo)
+        U_SaveFile(cArquivo, cCodigo)
     EndIf
 
     // inicializa
