@@ -1,11 +1,11 @@
 ADVPLayL
 ========
-Editor para fins educativos com compila‡?o online.
+Editor para fins educativos com compilação online.
 
 **o que vai precisar:**
 - protheus
 
-**o que reposit¢rio possui:**
+**o que repositório possui:**
 - runtime.prw
 - editor.aph
 - explorer.aph
@@ -14,9 +14,9 @@ Editor para fins educativos com compila‡?o online.
 Como configurar
 =============
 
-Considerando que vocˆ saiba com compilar fontes no Protheus. Ap¢s compilar, 
+Considerando que você saiba com compilar fontes no Protheus. Após compilar, 
 apenas configurar o http server do protheus no appserver.ini da com as 
-seguintes informa‡?es:
+seguintes informaçães:
 
 ```
 [HTTP]
@@ -30,7 +30,7 @@ ENVIRONMENT=AMBIENTE_QUE_EXISTA
 Como utilizar
 =============
 
-Ap¢s a configura‡?o apenas acessar em seu browser:
+Após a configuração apenas acessar em seu browser:
 
 ```
 http://localhost/u_editor.aph
@@ -39,20 +39,20 @@ http://localhost/u_editor.aph
 A interface consiste em um editor, onde o programa ser  escrito. E algumas 
 caixas para interagir com o programa.
 
-A caixa de stdout (sa¡da), ir  exibir o que o programa enviar para _U_Stdout()_
+A caixa de stdout (saída), ir  exibir o que o programa enviar para _U_Stdout()_
 e _U_StdoutLn()_ onde a segunda automaticamente quebra uma linha. Os valores 
-s?o automaticamente convertidos para string.
+são automaticamente convertidos para string.
 
-A caixa de stdout (sa¡da esperada), deve ser colocado o valor que vocˆ espera
-exibir com o seu programa, assim a ferramenta compara sua sa¡da com a sa¡da
-esperada e avisa se o algoritmo funcionou. Porem n?o ‚ obrigatorio preenche-lo.
+A caixa de stdout (saída esperada), deve ser colocado o valor que você espera
+exibir com o seu programa, assim a ferramenta compara sua saída com a saída
+esperada e avisa se o algoritmo funcionou. Porem não é obrigatorio preenche-la.
 
-A caixa de stdin (entrada), ‚ onde pode informar os dados que entram no 
-programa, para cada chamada da fun‡?o _U_Stdin()_ a fun‡?o retorna uma linha 
-desta caixa para dentro do programa. A fun‡?o sempre retorna uma string.
+A caixa de stdin (entrada), é onde pode informar os dados que entram no 
+programa, para cada chamada da função _U_Stdin()_ a função retorna uma linha 
+desta caixa para dentro do programa. A função sempre retorna uma string.
 
-A caixa options, conta com o entry que ‚ o nome da primeira fun‡?o que ser 
-chamada na execu‡?o. E tamb‚m filename, que guarda um arquivo no servidor com
+A caixa options, conta com o entry que é o nome da primeira função que ser 
+chamada na execução. E também filename, que guarda um arquivo no servidor com
 esse nome. Que pode ser recuperado pelo explorer.
 
 Para acessar o explorer:
@@ -62,13 +62,13 @@ http://localhost/u_explorer.aph
 ```
 
 
-Detalhe do reposit¢rio
+Detalhe do repositório
 ======================
 
 **runtime.prw**
 
-Possui a classe do RPO auxiliar e fun‡?es U_Stdout, U_StdoutLn e U_Stdin, 
-tamb‚m a fun‡?o que recebe a requisi‡?o compila executa e devolve o retorno.
+Possui a classe do RPO auxiliar e funçães U_Stdout, U_StdoutLn e U_Stdin, 
+também a função que recebe a requisição compila executa e devolve o retorno.
 
 **editor.aph**
 
@@ -82,7 +82,7 @@ Possui o HTML da interface do usu rio com o explorer de arquivos.
 Extras
 ======
 
-Caso vocˆ possua a chave de compila‡?o da Totvs ‚ poss¡vel remover os "U_" 
+Caso você possua a chave de compilação da Totvs é possível remover os "U_" 
 apenas removendo o define inicial USERFUNCTION do fonte runtime.prw
 
 
