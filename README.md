@@ -1,4 +1,4 @@
-[Editor](img/tela.png?raw=true)
+![Editor](img/tela.png?raw=true)
 
 ADVPLayL
 ========
