@@ -35,6 +35,16 @@
                 <span class="w3-button">Exerc&iacute;cios</span>
                 <div class="w3-dropdown-content w3-card-4">
                     <a href="https://www.hackerrank.com/dashboard" class="w3-bar-item w3-button" target="_blank">Hacker Rank</a>
+                    <a href="https://www.codechef.com/problems/school" class="w3-bar-item w3-button" target="_blank">Code Chef</a>
+                    <a href="http://br.spoj.com/problems/seletivas/" class="w3-bar-item w3-button" target="_blank">Sphere Online Judge</a>
+                    <a href="https://www.urionlinejudge.com.br/judge/pt/categories" class="w3-bar-item w3-button" target="_blank">URI Online Judge</a>
+                </div>
+            </div>
+            <div class="w3-dropdown-hover w3-mobile">
+                <span class="w3-button">Pesquisar no TDN</span>
+                <div class="w3-dropdown-content w3-card-4">
+                    <input id="get_tdn" type="text" class="w3-input w3-border" name="entry" placeholder="Digite sua pesquisa aqui"/>
+                    <button id="btn_tdn" class="w3-btn w3-theme-d4" style="width: 100%">Pesquisar &#128270;</button>
                 </div>
             </div>
         </nav>
@@ -160,6 +170,19 @@
                     event.preventDefault();
                 });
 
+                // pesquisa no TDN
+                $('#btn_tdn').click( function( event ) {
+                    var cSearch = $('#get_tdn').val();
+
+                    if ( cSearch !== null && cSearch !== '' ) {
+                        //Abre a pesquisa e uma outra aba
+                        window.open( 'http://tdn.totvs.com.br/dosearchsite.action?queryString=' + cSearch , '_blank' );
+                        $('#get_tdn').val( "" );
+                    }
+
+                    return false;
+                });
+
                 // adicionada execucao com f9
                 $(window).bind('keyup', function(event) {
                     if (event.key.toLowerCase() === 'f9') {
@@ -178,4 +201,4 @@
 
         </form>
     </body>
-</html> 
+</html>
