@@ -2,12 +2,27 @@
 
 #Define USERFUNCTION
 
+//Define de nome da variável global criada para a exclusão dos RPO's
+#Define C_CLEANING 'AdvPlayL_Clear'
+
+//Chave criada para ter certeza que o RPO foi gerado pelo AdvPlayL
+#Define C_ADVPLAYL 'AdvPlayL'
+
+//-------------------------------------------------------------------
+/*/{Protheus.doc} RPO2
+Classe RPO2, responsável pela compilação de fontes em ADVPL
+
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 Class RPO2
     Data oRPO
     Data cRPO
     Data lAberto
     Data cErrStr
     Data nErrLine
+    Data cPathRPO
+    Data aPathInclude
 
     Method New() Constructor
     Method Open()
@@ -16,84 +31,170 @@ Class RPO2
     Method Compile(cFile, cSource)
 EndClass
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} New
+Método de instancia da classe
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 Method New(cRPO) Class RPO2
-    ::cRPO := cRPO
-    ::lAberto := .F.
-    ::cErrStr := ""
-    ::nErrLine := 0
+    Self:cRPO     := cRPO
+    Self:lAberto  := .F.
+    Self:nErrLine := 0
+    Self:cErrStr  := ""
+    Self:oRPO     := Nil
+
+    //Utilizo a Rootpath para salvar o RPO, pois quando não existe Smartclient, eu encontro por padrão a Roopath ao trabahar com /
+    Self:cPathRPO     := AllTrim( GetSrvProfString( 'ROOTPATH' , '' ) )    
+    Self:aPathInclude := StrTokArr( AllTrim( GetSrvProfString( 'DIRINCLUDE' , '' ) ) , ';' )
+
+    //Valida o path
+    If !Empty( Self:cPathRPO )
+        If Right( Self:cPathRPO , 1 ) != Iif( IsSrvUnix() , '/' , '\' )
+            Self:cPathRPO += Iif( IsSrvUnix() , '/' , '\' )
+        EndIf
+    EndIf
 Return Self
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Open
+Método de abertura do RPO
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 Method Open() Class RPO2
-    If ! ::lAberto
-        ::oRPO := RPO():New()
-        If ::oRPO:Open(::cRPO)
-            ::lAberto := .T.
-            Return .T.
+    Local lRet := .T.
+    If ! Self:lAberto
+        Self:oRPO := RPO():New()
+
+        //Definição dos includes
+        Self:oRPO:Includes   := Self:aPathInclude
+        //Define padrão para ambiente TOP, esse include já adiciona o Protheus.ch
+        Self:oRPO:MainHeader := 'PRTOPDEF.CH'
+
+        If Self:oRPO:Open( Self:cPathRPO + Self:cRPO )
+            Self:lAberto := .T.
+            lRet := .T.
+        Else
+            lRet := .F.
         EndIf
-        Return .F.
     EndIf
-Return .T.
+Return lRet
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Close
+Método responsável por fechar o RPO após o uso
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 Method Close() Class RPO2
-    If ::lAberto
-        If ::oRPO:Close()
-            ::lAberto := .F.
-            Return .T.
+    Local lRet := .T.
+
+    If Self:lAberto
+        If Self:oRPO:Close()
+            Self:lAberto := .F.
+            lRet := .T.
+        Else
+            lRet := .F.
         EndIf
-        Return .F.
     EndIf
-Return .T.
+Return lRet
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Reload
+Método que efetua um refresh no RPO
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 Method Reload() Class RPO2
-Return ::Close() .And. ::Open()
+Return Self:Close() .And. Self:Open()
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Compile
+Método responsável pela compilação no RPO
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 Method Compile(cFile, cSource) Class RPO2
-    If ! ::Open()
+    Local cPreC := ''
+    Local aDeps := {}
+
+    If ! Self:Open()
         Return .F.
     EndIf
 
-    If ! ::oRPO:StartBuild(.T.)
-        ::Reload()
+    If ! Self:oRPO:StartBuild( .T. )
+        Self:Reload()
         Return .F.
     EndIf
 
-    If ! ::oRPO:Compile(cFile, cSource, 0, ::oRPO:ChkSum(cSource))
-        ::cErrStr := ::oRPO:ErrStr
-        ::nErrLine := ::oRPO:ErrLine
-        ::Reload()
+    //A pré-compilação não é obrigatória, porém trata diversas questões no fonte, XCOMMAND, XTRANSLATE...
+    If Self:oRPO:PreComp( cFile , cSource , @cPreC , @aDeps )
+        cSource := cPreC
+    Else
+        Self:Reload()
+
+        If ! Self:oRPO:StartBuild( .T. )
+            Return .F.
+        EndIf
+    EndIf
+
+    If ! Self:oRPO:Compile( cFile , cSource , 0 , Self:oRPO:ChkSum( cSource ) )
+        Self:cErrStr  := Self:oRPO:ErrStr
+        Self:nErrLine := Self:oRPO:ErrLine
+        Self:Reload()
         Return .F.
     EndIf
 
-    If ! ::oRPO:EndBuild()
-        ::Reload()
+    If ! Self:oRPO:EndBuild()
+        Self:Reload()
         Return .F.
     EndIf
-Return ::Reload()
+Return Self:Reload()
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Stdout
+Função que permite a impressão de valores no AdvPlayl
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 #IfDef USERFUNCTION
 User Function Stdout(cMessage)
 #Else
 Function Stdout(cMessage)
 #EndIf
     cOutput += AsString(cMessage)
-Return
+Return Nil
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} StdoutLn
+Função que permite a impressão de valores
+no AdvPlayl com quebra de linha
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 #IfDef USERFUNCTION
 User Function StdoutLn(cMessage)
 #Else
 Function StdoutLn(cMessage)
 #EndIf
     cOutput += AsString(cMessage) + Chr(10)
-Return
+Return Nil
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Stdin
+Função que permite a entrada de dados no AdvPlayl
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 #IfDef USERFUNCTION
 User Function Stdin()
 #Else
@@ -106,22 +207,34 @@ Function Stdin()
     EndIf
 Return cInput
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} SaveFile
+Função responsável por salvar os fontes
 
-User Function SaveFile(cFilename, cContent)
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
+User Function SaveFile( cFilename , cContent )
     Local cFile := "./fontes"
     Local nFile := 0
 
     // cria diretorio (nao importa se nao funcionar)
-    MakeDir(cFile)
+    MakeDir( cFile )
     cFile += "/" + cFilename
 
     // salva o arquivo no disco (nao precisa conferir)
-    nFile := FCreate(cFile)
-    FWrite(nFile, cContent)
-    FClose(nFile)
-Return
+    nFile := FCreate( cFile )
+    FWrite( nFile , cContent )
+    FClose( nFile )
+Return Nil
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} LoadFile
+Função responsável por ler um fonte já existente
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 User Function LoadFile(__aProcParms)
     Local cContent := ""
     Local nI       := 0
@@ -152,7 +265,13 @@ User Function LoadFile(__aProcParms)
     EndIf
 Return cContent
 
+//-------------------------------------------------------------------
+/*/{Protheus.doc} Runtime
+Função que compila e executa o código ADVPL
 
+@author Daniel Lira
+/*/
+//-------------------------------------------------------------------
 User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTPPage)
     Local nI      := 0
     Local cName   := ""
@@ -203,18 +322,60 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
     EndIf
 
     // inicializa
-    oRPO2 := RPO2():New(cUUID + ".rpo")
+    oRPO2 := RPO2():New( cUUID + C_ADVPLAYL + ".rpo" )
 
     // se compilou executa
-    If oRPO2:Compile(cUUID + ".prw", cCodigo)
+    If oRPO2:Compile( cUUID + C_ADVPLAYL + ".prw" , cCodigo )
         ErrorBlock({|oError| cOutput := oError:ErrorStack})
         &(cEntry)
-        
+
     // se nao compilou mostra erro
     Else
         cOutput := oRPO2:cErrStr
-        
     EndIf
+
+    //Job que faz a exclusão dos RPOs gerados
+    StartJob( 'U_AdvPlaylClear' , GetEnvServer() , .F. )
+    Sleep( 500 )
 
     oRPO2:Close()
 Return cOutput
+
+//-------------------------------------------------------------------
+/*/{Protheus.doc} ClearRPO
+JOB de exclusão de RPOs
+
+@author Daniel Mendes
+/*/
+//-------------------------------------------------------------------
+User Function AdvPlaylClear()
+Local cPath := ''
+Local cKey  := ''
+Local aRPOs := Nil
+Local nLoop := 0
+
+cKey := GetGlbValue( C_CLEANING )
+
+If Empty( cKey ) .Or. Seconds() >= Val( cKey ) + 900 //15 minutos
+    ClearGlbValue( C_CLEANING )
+    PutGlbValue( C_CLEANING , cValToChar( Seconds() ) )
+
+    //GetUserInfoArray() //Estudar essa função
+
+    cPath := AllTrim( GetSrvProfString( 'SOURCEPATH' , '' ) )
+
+    //Só efetuo a limpeza caso eu encontre a chave, caso contrário o RPO é gerado em outro lugar =P
+    If !Empty( cPath )
+        cPath := Iif( IsSrvUnix() , '/' , '\' )
+        aRPOs := Directory( cPath + '*' + C_ADVPLAYL + '.rpo' , 'H' , Nil , .F. , 1 )
+
+        If !Empty( aRPOs )
+            For nLoop := 1 To Len( aRPOs )
+                //Não excluo os RPOs padrões do sistema...
+                FErase( cPath + aRPOs[ nLoop , 1 ] )
+            Next nLoop
+        EndIf
+    EndIf
+EndIf
+
+Return Nil
