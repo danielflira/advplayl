@@ -42,7 +42,7 @@
             </div>
             <div class="w3-dropdown-hover w3-mobile">
                 <span class="w3-button">Pesquisar no TDN</span>
-                <div class="w3-dropdown-content w3-card-4">
+                <div class="w3-dropdown-content w3-bar-block w3-card-4">
                     <input id="get_tdn" type="text" class="w3-input w3-border" name="entry" placeholder="Digite sua pesquisa aqui"/>
                     <button id="btn_tdn" class="w3-btn w3-theme-d4" style="width: 100%">Pesquisar &#128270;</button>
                 </div>
