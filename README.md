@@ -28,6 +28,15 @@ PATH=C:\caminho\qualquer\da\sua\maquina
 ENVIRONMENT=AMBIENTE_QUE_EXISTA
 ```
 
+```
+[AMBIENTE_QUE_EXISTA]
+ROOTPATH=C:\caminho\qualquer\da\sua\maquina\Protheus_Data
+DIRINCLUDE:C:\caminho\qualquer\da\sua\maquina\Includes
+```
+
+Obs.: Caso o diretório de includes [DIRINCLUDE] não
+seja informado, a pré-compilação não é executada.
+
 
 Como utilizar
 =============
