@@ -2,15 +2,16 @@
 
 #Define USERFUNCTION
 
-//Define de nome da variável global criada para a exclusão dos RPO's
+//Define de nome da variavel global criada para a exclusao dos RPO's
 #Define C_CLEANING 'AdvPlayL_Clear'
 
 //Chave criada para ter certeza que o RPO foi gerado pelo AdvPlayL
 #Define C_ADVPLAYL 'AdvPlayL'
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} RPO2
-Classe RPO2, responsável pela compilação de fontes em ADVPL
+Classe RPO2, responsavel pela compilacao de fontes em ADVPL
 
 @author Daniel Lira
 /*/
@@ -31,9 +32,10 @@ Class RPO2
     Method Compile(cFile, cSource)
 EndClass
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} New
-Método de instancia da classe
+Metodo de instancia da classe
 
 @author Daniel Lira
 /*/
@@ -45,7 +47,8 @@ Method New(cRPO) Class RPO2
     Self:cErrStr  := ""
     Self:oRPO     := Nil
 
-    //Utilizo a Rootpath para salvar o RPO, pois quando não existe Smartclient, eu encontro por padrão a Roopath ao trabahar com /
+    // Utilizo a Rootpath para salvar o RPO, pois quando nao existe
+    // Smartclient, eu encontro por padrao a Roopath ao trabahar com /
     Self:cPathRPO     := AllTrim( GetSrvProfString( 'ROOTPATH' , '' ) )    
     Self:aPathInclude := StrTokArr( AllTrim( GetSrvProfString( 'DIRINCLUDE' , '' ) ) , ';' )
 
@@ -57,9 +60,10 @@ Method New(cRPO) Class RPO2
     EndIf
 Return Self
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Open
-Método de abertura do RPO
+Metodo de abertura do RPO
 
 @author Daniel Lira
 /*/
@@ -69,9 +73,9 @@ Method Open() Class RPO2
     If ! Self:lAberto
         Self:oRPO := RPO():New()
 
-        //Definição dos includes
+        //Definicao dos includes
         Self:oRPO:Includes   := Self:aPathInclude
-        //Define padrão para ambiente TOP, esse include já adiciona o Protheus.ch
+        //Define padrao para ambiente TOP, esse include ja adiciona o Protheus.ch
         Self:oRPO:MainHeader := 'PRTOPDEF.CH'
 
         If Self:oRPO:Open( Self:cPathRPO + Self:cRPO )
@@ -83,9 +87,10 @@ Method Open() Class RPO2
     EndIf
 Return lRet
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Close
-Método responsável por fechar o RPO após o uso
+Metodo responsavel por fechar o RPO apos o uso
 
 @author Daniel Lira
 /*/
@@ -103,9 +108,10 @@ Method Close() Class RPO2
     EndIf
 Return lRet
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Reload
-Método que efetua um refresh no RPO
+Metodo que efetua um refresh no RPO
 
 @author Daniel Lira
 /*/
@@ -113,9 +119,10 @@ Método que efetua um refresh no RPO
 Method Reload() Class RPO2
 Return Self:Close() .And. Self:Open()
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Compile
-Método responsável pela compilação no RPO
+Metodo responsavel pela compilacao no RPO
 
 @author Daniel Lira
 /*/
@@ -133,7 +140,8 @@ Method Compile(cFile, cSource) Class RPO2
         Return .F.
     EndIf
 
-    //A pré-compilação não é obrigatória, porém trata diversas questões no fonte, XCOMMAND, XTRANSLATE...
+    // A pre-compilacao nao e obrigatoria, porem trata diversas
+    // questoes no fonte, XCOMMAND, XTRANSLATE...
     If Self:oRPO:PreComp( cFile , cSource , @cPreC , @aDeps )
         cSource := cPreC
     Else
@@ -157,9 +165,10 @@ Method Compile(cFile, cSource) Class RPO2
     EndIf
 Return Self:Reload()
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Stdout
-Função que permite a impressão de valores no AdvPlayl
+Funcao que permite a impressao de valores no AdvPlayl
 
 @author Daniel Lira
 /*/
@@ -172,9 +181,10 @@ Function Stdout(cMessage)
     cOutput += AsString(cMessage)
 Return Nil
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} StdoutLn
-Função que permite a impressão de valores
+Funcao que permite a impressao de valores
 no AdvPlayl com quebra de linha
 
 @author Daniel Lira
@@ -188,9 +198,10 @@ Function StdoutLn(cMessage)
     cOutput += AsString(cMessage) + Chr(10)
 Return Nil
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Stdin
-Função que permite a entrada de dados no AdvPlayl
+Funcao que permite a entrada de dados no AdvPlayl
 
 @author Daniel Lira
 /*/
@@ -207,9 +218,10 @@ Function Stdin()
     EndIf
 Return cInput
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} SaveFile
-Função responsável por salvar os fontes
+Funcao responsavel por salvar os fontes
 
 @author Daniel Lira
 /*/
@@ -228,9 +240,10 @@ User Function SaveFile( cFilename , cContent )
     FClose( nFile )
 Return Nil
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} LoadFile
-Função responsável por ler um fonte já existente
+Funcao responsavel por ler um fonte ja existente
 
 @author Daniel Lira
 /*/
@@ -265,9 +278,10 @@ User Function LoadFile(__aProcParms)
     EndIf
 Return cContent
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} Runtime
-Função que compila e executa o código ADVPL
+Funcao que compila e executa o codigo ADVPL
 
 @author Daniel Lira
 /*/
@@ -334,16 +348,17 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
         cOutput := oRPO2:cErrStr
     EndIf
 
-    //Job que faz a exclusão dos RPOs gerados
+    // Job que faz a exclusao dos RPOs gerados
     StartJob( 'U_AdvPlaylClear' , GetEnvServer() , .F. )
     Sleep( 500 )
 
     oRPO2:Close()
 Return cOutput
 
+
 //-------------------------------------------------------------------
 /*/{Protheus.doc} ClearRPO
-JOB de exclusão de RPOs
+JOB de exclusao de RPOs
 
 @author Daniel Mendes
 /*/
@@ -360,18 +375,19 @@ If Empty( cKey ) .Or. Seconds() >= Val( cKey ) + 900 //15 minutos
     ClearGlbValue( C_CLEANING )
     PutGlbValue( C_CLEANING , cValToChar( Seconds() ) )
 
-    //GetUserInfoArray() //Estudar essa função
+    //GetUserInfoArray() //Estudar essa funcao
 
     cPath := AllTrim( GetSrvProfString( 'SOURCEPATH' , '' ) )
 
-    //Só efetuo a limpeza caso eu encontre a chave, caso contrário o RPO é gerado em outro lugar =P
+    // So efetuo a limpeza caso eu encontre a chave, caso contrario 
+    // o RPO e gerado em outro lugar =P
     If !Empty( cPath )
         cPath := Iif( IsSrvUnix() , '/' , '\' )
         aRPOs := Directory( cPath + '*' + C_ADVPLAYL + '.rpo' , 'H' , Nil , .F. , 1 )
 
         If !Empty( aRPOs )
             For nLoop := 1 To Len( aRPOs )
-                //Não excluo os RPOs padrões do sistema...
+                //Nao excluo os RPOs padroes do sistema...
                 FErase( cPath + aRPOs[ nLoop , 1 ] )
             Next nLoop
         EndIf
