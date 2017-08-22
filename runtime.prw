@@ -130,6 +130,7 @@ Metodo responsavel pela compilacao no RPO
 Method Compile(cFile, cSource) Class RPO2
     Local cPreC := ''
     Local aDeps := {}
+    Local nDate := Date() - SToD("19991231")
 
     If ! Self:Open()
         Return .F.
@@ -152,7 +153,7 @@ Method Compile(cFile, cSource) Class RPO2
         EndIf
     EndIf
 
-    If ! Self:oRPO:Compile( cFile , cSource , 0 , Self:oRPO:ChkSum( cSource ) )
+    If ! Self:oRPO:Compile( cFile , cSource , nDate , Self:oRPO:ChkSum( cSource ) )
         Self:cErrStr  := Self:oRPO:ErrStr
         Self:nErrLine := Self:oRPO:ErrLine
         Self:Reload()
@@ -341,7 +342,9 @@ User Function Runtime(__aCookies, __aPostParms, __nProcID, __aProcParms, __cHTTP
     // se compilou executa
     If oRPO2:Compile( cUUID + C_ADVPLAYL + ".prw" , cCodigo )
         ErrorBlock({|oError| cOutput := oError:ErrorStack})
+        Begin Sequence
         &(cEntry)
+        End Sequence
 
     // se nao compilou mostra erro
     Else
