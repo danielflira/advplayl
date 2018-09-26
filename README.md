@@ -44,7 +44,7 @@ Como utilizar
 Após a configuração apenas acessar em seu browser:
 
 ```
-http://localhost/h_editor.aph
+http://localhost/h_editor.apl
 ```
 
 A interface consiste em um editor, onde o programa ser  escrito. E algumas 
@@ -69,7 +69,7 @@ esse nome. Que pode ser recuperado pelo explorer.
 Para acessar o explorer:
 
 ```
-http://localhost/u_explorer.aph
+http://localhost/u_explorer.apl
 ```
 
 
